@@ -4,9 +4,6 @@
 * Author: BootstrapMade.com
 */
 
-require('dotenv').config();
-const nodemailer = require("nodemailer");
-
 (function () {
   "use strict";
 
@@ -37,8 +34,7 @@ const nodemailer = require("nodemailer");
               grecaptcha.execute(recaptcha)
               .then(token => {
                 formData.set('recaptcha-response', token);
-                // email_form_submit(thisForm, formData);
-                email_form_submit_ethereal(thisForm, formData);
+                email_form_submit(thisForm, formData);
               })
             } catch (error) {
               displayError(thisForm, error);
@@ -48,11 +44,31 @@ const nodemailer = require("nodemailer");
           displayError(thisForm, 'The reCaptcha javascript API url is not loaded!')
         }
       } else {
-       // email_form_submit(thisForm, formData);
-        email_form_submit_ethereal(thisForm, formData);
+       email_form_submit(thisForm, formData);
       }
     });
   });
+
+  function email_form_submit(thisForm, formData) {
+    const encodedSubject = encodeURIComponent(formData.get("subject") || ''); 
+    const encodedBody = encodeURIComponent(`${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}` || '');
+    // Construct the mailto link
+    let mailtoUrl = `mailto:jenn.tillman55@gmail.com`
+    if(encodedSubject || encodedBody) {
+      mailtoUrl += `?`;
+      if(encodedSubject) {
+        mailtoUrl += `subject=${encodedSubject}`;
+      }
+      if(encodedBody) {
+        if(encodedSubject) {
+          mailtoUrl += `&`;
+        }
+        mailtoUrl += `body=${encodedBody}`;
+  }
+    }
+    // Open the mailto link
+    window.location.href = mailtoUrl;
+  }
 
   // function email_form_submit(thisForm, formData) {
   //   Email.send({
@@ -81,62 +97,62 @@ const nodemailer = require("nodemailer");
     thisForm.querySelector('.error-message').classList.add('d-block');
   }
 
-  async function email_form_submit(thisForm, formData) {
-    // Nodemailer Transporter
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        type: "OAuth2",
-        user: "jenn.tillman55@gmail.com",
-        accessToken: `${process.env.ACCESS_TOKEN}`,
-      },
-    });
+  // async function email_form_submit(thisForm, formData) {
+  //   // Nodemailer Transporter
+  //   const transporter = nodemailer.createTransport({
+  //     host: "smtp.gmail.com",
+  //     port: 465,
+  //     secure: true,
+  //     auth: {
+  //       type: "OAuth2",
+  //       user: "jenn.tillman55@gmail.com",
+  //       accessToken: `${process.env.ACCESS_TOKEN}`,
+  //     },
+  //   });
 
-    const mailInfo = await transporter.sendMail({
-      from: "Nodemailer <jenn.tillman55@gmail.com>", // Header From:
-      to: "Jen Tillman <jenn.tillman55@gmail.com>", // Header To:
-      envelope: {
-        from: "jenn.tillman55@gmail.com",
-        to: [
-          "jenn.tillman55@gmail.com"
-        ],
-        cc: [
-          // Career Todo: Add CC emails here
-          "u7uwf9yjbf00nwfxuam7xqm2~72218714-b90a-11ed-8d56-f27a94c8b4fd@amplenote.email"
-        ],
-      },
-        subject: `${formData.get("subject")} SMTP Email`,
-        text: `${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}`,
-      });
+  //   const mailInfo = await transporter.sendMail({
+  //     from: "Nodemailer <jenn.tillman55@gmail.com>", // Header From:
+  //     to: "Jen Tillman <jenn.tillman55@gmail.com>", // Header To:
+  //     envelope: {
+  //       from: "jenn.tillman55@gmail.com",
+  //       to: [
+  //         "jenn.tillman55@gmail.com"
+  //       ],
+  //       cc: [
+  //         // Career Todo: Add CC emails here
+  //         "u7uwf9yjbf00nwfxuam7xqm2~72218714-b90a-11ed-8d56-f27a94c8b4fd@amplenote.email"
+  //       ],
+  //     },
+  //       subject: `${formData.get("subject")} SMTP Email`,
+  //       text: `${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}`,
+  //     });
 
-        console.log("Envelope used: mailInfo.envelope");
+  //       console.log("Envelope used: mailInfo.envelope");
   
-    }
+  //   }
 
-    const etherealTransporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-          user: 'uriah.mcclure@ethereal.email',
-          pass: 'D2e7cKx5NW1UxJFTUw'
-      }
-    });
+  //   const etherealTransporter = nodemailer.createTransport({
+  //     host: 'smtp.ethereal.email',
+  //     port: 587,
+  //     auth: {
+  //         user: 'uriah.mcclure@ethereal.email',
+  //         pass: 'D2e7cKx5NW1UxJFTUw'
+  //     }
+  //   });
 
-    email_form_submit_ethereal = async (thisForm, formData) => {
-      etherealTransporter.sendMail({
-        from: 'Uriah Mcclure <uriah.mcclure@ethereal.email>',
-        to: 'uriah.mcclure@ethereal.email',
-        subject: `${formData.get("subject")} SMTP Email`,
-        text: `${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}`,
-    })
-    .then((mailInfo) => {
-        console.log("Message sent: %s", mailInfo.messageId);
-        // Preview the stored message in Ethereal’s web UI
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(mailInfo));
-    })
-    .catch(console.error)
+  //   email_form_submit_ethereal = async (thisForm, formData) => {
+  //     etherealTransporter.sendMail({
+  //       from: 'Uriah Mcclure <uriah.mcclure@ethereal.email>',
+  //       to: 'uriah.mcclure@ethereal.email',
+  //       subject: `${formData.get("subject")} SMTP Email`,
+  //       text: `${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}`,
+  //   })
+  //   .then((mailInfo) => {
+  //       console.log("Message sent: %s", mailInfo.messageId);
+  //       // Preview the stored message in Ethereal’s web UI
+  //       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(mailInfo));
+  //   })
+  //   .catch(console.error)
   
-  };
+  // };
 })();

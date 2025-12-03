@@ -1,9 +1,5 @@
 {
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.3",
-    "nodemailer": "^7.0.11"
   }
 }
