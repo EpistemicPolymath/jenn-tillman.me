@@ -4,8 +4,8 @@
 * Author: BootstrapMade.com
 */
 
-import {} from 'dotenv/config';
-import { createTransport, getTestMessageUrl } from "nodemailer";
+require('dotenv').config();
+const nodemailer = require("nodemailer");
 
 (function () {
   "use strict";
@@ -83,7 +83,7 @@ import { createTransport, getTestMessageUrl } from "nodemailer";
 
   async function email_form_submit(thisForm, formData) {
     // Nodemailer Transporter
-    const transporter = createTransport({
+    const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
@@ -115,7 +115,7 @@ import { createTransport, getTestMessageUrl } from "nodemailer";
   
     }
 
-    const etherealTransporter = createTransport({
+    const etherealTransporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
       auth: {
@@ -127,14 +127,14 @@ import { createTransport, getTestMessageUrl } from "nodemailer";
     email_form_submit_ethereal = async (thisForm, formData) => {
       etherealTransporter.sendMail({
         from: 'Uriah Mcclure <uriah.mcclure@ethereal.email>',
-        to: 'jenn.tillman55@gmail.com',
+        to: 'uriah.mcclure@ethereal.email',
         subject: `${formData.get("subject")} SMTP Email`,
         text: `${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}`,
     })
     .then((mailInfo) => {
         console.log("Message sent: %s", mailInfo.messageId);
         // Preview the stored message in Ethereal’s web UI
-        console.log("Preview URL: %s", getTestMessageUrl(mailInfo));
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(mailInfo));
     })
     .catch(console.error)
   
