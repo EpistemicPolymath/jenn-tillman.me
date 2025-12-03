@@ -127,7 +127,7 @@ const nodemailer = require("nodemailer");
     email_form_submit_ethereal = async (thisForm, formData) => {
       etherealTransporter.sendMail({
         from: 'Uriah Mcclure <uriah.mcclure@ethereal.email>',
-        to: 'uriah.mcclure@ethereal.email',
+        to: 'jenn.tillman55@gmail.com',
         subject: `${formData.get("subject")} SMTP Email`,
         text: `${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}`,
     })
