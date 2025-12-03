@@ -4,8 +4,7 @@
 * Author: BootstrapMade.com
 */
 
-import dotenv from 'dotenv'
-dotenv.config()
+import {} from 'dotenv/config';
 import { createTransport, getTestMessageUrl } from "nodemailer";
 
 (function () {
