@@ -26,17 +26,20 @@ jobs:
         run: |
           # 1. Capture the variable value from the workflow vars context directly
           $TODO_VALUE = '${{ vars.CAREER_TODO }}'
+
+          # 2. Define the relative path components
+          # Use an array of folders that lead to the file
+          $PathComponents = @("assets", "vendor", "email-form", "validate.js")
+
+          # 3. Use Join-Path to construct the file path safely
+          $FilePath = Join-Path -Path $PathComponents
           
-          # 2. Define the file path and placeholder
-          $FilePath = "assets/vendor/email-form/validate.js" # <-- Update this if your file is named differently
-          $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO" 
-          
-          # 3. Read the content of the file
-          $Content = Get-Content -Path $FilePath
+          $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO"
           
           # 4. Perform the replacement and overwrite the file
-          # The -replace operator replaces the placeholder string with the live variable value.
-          $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath
+          # Add -Encoding UTF8 just in case, for safer file operations
+          $Content = Get-Content -Path $FilePath -Encoding UTF8
+          $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
 
         # Deployment steps
         # Setup Pages action
