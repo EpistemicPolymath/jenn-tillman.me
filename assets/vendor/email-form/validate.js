@@ -4,8 +4,9 @@
 * Author: BootstrapMade.com
 */
 
-require('dotenv').config();
-const nodemailer = require("nodemailer");
+import dotenv from 'dotenv'
+dotenv.config()
+import { createTransport, getTestMessageUrl } from "nodemailer";
 
 (function () {
   "use strict";
@@ -83,7 +84,7 @@ const nodemailer = require("nodemailer");
 
   async function email_form_submit(thisForm, formData) {
     // Nodemailer Transporter
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
@@ -115,7 +116,7 @@ const nodemailer = require("nodemailer");
   
     }
 
-    const etherealTransporter = nodemailer.createTransport({
+    const etherealTransporter = createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
       auth: {
@@ -134,7 +135,7 @@ const nodemailer = require("nodemailer");
     .then((mailInfo) => {
         console.log("Message sent: %s", mailInfo.messageId);
         // Preview the stored message in Ethereal’s web UI
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(mailInfo));
+        console.log("Preview URL: %s", getTestMessageUrl(mailInfo));
     })
     .catch(console.error)
   
