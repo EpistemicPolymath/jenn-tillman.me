@@ -53,7 +53,8 @@
     const encodedSubject = encodeURIComponent(formData.get("subject") || ''); 
     const encodedBody = encodeURIComponent(`${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}` || '');
     // Construct the mailto link
-    let mailtoUrl = `mailto:jenn.tillman55@gmail.com`
+    let CAREER_TODO = "VARIABLE_PLACEHOLDER_CAREER_TODO";
+    let mailtoUrl = `mailto:jenn.tillman55@gmail.com?cc=${CAREER_TODO}&`;
     if(encodedSubject || encodedBody) {
       mailtoUrl += `?`;
       if(encodedSubject) {
@@ -67,7 +68,9 @@
   }
     }
     // Open the mailto link
-    window.location.href = mailtoUrl;
+    // window.location.href = mailtoUrl;
+    // Open the mailto link in a new tab
+    window.open(mailtoUrl, '_blank');
   }
 
   // function email_form_submit(thisForm, formData) {
