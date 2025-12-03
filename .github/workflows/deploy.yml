@@ -28,7 +28,7 @@ jobs:
           $TODO_VALUE = '${{ vars.CAREER_TODO }}'
           
           # 2. Define the file path and placeholder
-          $FilePath = "assets\vendor\email-form\validate.js" # <-- Update this if your file is named differently
+          $FilePath = "assets/vendor/email-form/validate.js" # <-- Update this if your file is named differently
           $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO" 
           
           # 3. Read the content of the file
