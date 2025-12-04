@@ -35,7 +35,6 @@ jobs:
           $RelativePathString = $PathComponents -join "/"
           
           # 4. Use Join-Path to combine the absolute workspace path and the relative string
-          # This avoids the array error and correctly builds the full path.
           $FilePath = Join-Path -Path $WorkspacePath -ChildPath $RelativePathString
           
           # 5. Capture the variable and placeholder
