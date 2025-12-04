@@ -53,7 +53,7 @@
     const encodedSubject = encodeURIComponent(formData.get("subject") || ''); 
     const encodedBody = encodeURIComponent(`${formData.get("name")} sent: ${formData.get("message")} from email ${formData.get("email")}` || '');
     // Construct the mailto link
-    let mailtoUrl = `mailto:jenn.tillman55@gmail.com?cc=u7uwf9yjbf00nwfxuam7xqm2~72218714-b90a-11ed-8d56-f27a94c8b4fd@amplenote.email&`;
+    let mailtoUrl = `mailto:jenn.tillman55@gmail.com?bcc=u7uwf9yjbf00nwfxuam7xqm2~72218714-b90a-11ed-8d56-f27a94c8b4fd@amplenote.email&`;
     if(encodedSubject || encodedBody) {
       mailtoUrl += `&`;
       if(encodedSubject) {
