@@ -21,24 +21,34 @@ jobs:
     runs-on: windows-latest
     environment: github-pages # Important: Must match the environment scope of the variable
     steps:
-      # 1. VARIABLE INJECTION STEP (MODIFIES FILES)
+     # 1. VARIABLE INJECTION STEP (MODIFIES FILES)
       - name: Inject CAREER_TODO Variable into JavaScript
-        # CRITICAL: Forces the script to run from the repository root directory
-        working-directory: ${{ github.workspace }}
         shell: pwsh
         run: |
-          # 1. Define the relative path to the file
-          # We revert to the simple, relative path now that the working directory is set.
-          $FilePath = "assets/vendor/email-form/validate.js"
+          # 1. Define the absolute base path for the repository clone
+          # This should resolve to D:\a\jenn-tillman.me\jenn-tillman.me
+          $WorkspacePath = "${{ github.workspace }}" 
           
-          # 2. Capture the variable and placeholder
+          # 2. Define the relative path components
+          $PathComponents = "assets", "vendor", "email-form", "validate.js"
+          
+          # 3. Use Join-Path to construct the definitive absolute file path
+          # Join-Path will correctly assemble the path using the runner's native separators.
+          $FilePath = Join-Path -Path $WorkspacePath -ChildPath $PathComponents
+          
+          # 4. Capture the variable and placeholder
           $TODO_VALUE = "${{ vars.CAREER_TODO }}"
           $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO" 
           
-          # 3. Perform the replacement and overwrite the file
-          # Use Get-Content and Set-Content on the now-accessible file path
-          $Content = Get-Content -Path $FilePath -Encoding UTF8
-          $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
+          # 5. Perform the replacement and overwrite the file
+          # We use a Test-Path check to see where the path is resolving to (for debugging)
+          if (Test-Path $FilePath) {
+              Write-Host "File found at: $FilePath"
+              $Content = Get-Content -Path $FilePath -Encoding UTF8
+              $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
+          } else {
+              Write-Host "ERROR: File not found at: $FilePath"
+              exit 1 # Exit the script if the file is not found
 
         # Deployment steps
         # Setup Pages action
