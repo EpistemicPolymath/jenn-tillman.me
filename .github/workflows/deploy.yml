@@ -32,7 +32,9 @@ jobs:
           $PathComponents = @("assets", "vendor", "email-form", "validate.js")
 
           # 3. Use Join-Path to construct the file path safely
-          $FilePath = Join-Path -Path $PathComponents
+          # . is the current directory (repo root)
+          # $PathComponents is the ChildPath
+          $FilePath = Join-Path -Path "." -ChildPath $PathComponents
           
           $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO"
           
