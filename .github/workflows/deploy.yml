@@ -26,14 +26,12 @@ jobs:
         shell: pwsh
         run: |
           # 1. Define the absolute base path for the repository clone
-          # This should resolve to D:\a\jenn-tillman.me\jenn-tillman.me
           $WorkspacePath = "${{ github.workspace }}" 
           
           # 2. Define the relative path components
           $PathComponents = "assets", "vendor", "email-form", "validate.js"
           
           # 3. Use Join-Path to construct the definitive absolute file path
-          # Join-Path will correctly assemble the path using the runner's native separators.
           $FilePath = Join-Path -Path $WorkspacePath -ChildPath $PathComponents
           
           # 4. Capture the variable and placeholder
@@ -41,14 +39,9 @@ jobs:
           $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO" 
           
           # 5. Perform the replacement and overwrite the file
-          # We use a Test-Path check to see where the path is resolving to (for debugging)
-          if (Test-Path $FilePath) {
-              Write-Host "File found at: $FilePath"
-              $Content = Get-Content -Path $FilePath -Encoding UTF8
-              $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
-          } else {
-              Write-Host "ERROR: File not found at: $FilePath"
-              exit 1 # Exit the script if the file is not found
+          # We remove the complex if/else block to fix the parser error.
+          $Content = Get-Content -Path $FilePath -Encoding UTF8
+          $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
 
         # Deployment steps
         # Setup Pages action
