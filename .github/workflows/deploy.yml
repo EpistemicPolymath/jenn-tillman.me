@@ -24,22 +24,19 @@ jobs:
       - name: Inject CAREER_TODO Variable into JavaScript
         shell: pwsh # Use PowerShell for the Windows runner
         run: |
-          # 1. Capture the variable value from the workflow vars context directly
-          $TODO_VALUE = '${{ vars.CAREER_TODO }}'
-
-          # 2. Define the relative path components
-          # Use an array of folders that lead to the file
-          $PathComponents = @("assets", "vendor", "email-form", "validate.js")
-
-          # 3. Use Join-Path to construct the file path safely
-          # . is the current directory (repo root)
-          # $PathComponents is the ChildPath
-          $FilePath = Join-Path -Path "." -ChildPath $PathComponents
+          # 1. Define the relative path to the file
+          # We use forward slashes as the standard path separator.
+          $RelativePath = "assets/vendor/email-form/validate.js"
           
-          $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO"
+          # 2. Use Resolve-Path to find the correct physical file location
+          # This should correctly handle the runner's workspace directory structure.
+          $FilePath = Resolve-Path $RelativePath
+          
+          # 3. Capture the variable and placeholder
+          $TODO_VALUE = "${{ vars.CAREER_TODO }}"
+          $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO" 
           
           # 4. Perform the replacement and overwrite the file
-          # Add -Encoding UTF8 just in case, for safer file operations
           $Content = Get-Content -Path $FilePath -Encoding UTF8
           $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
 
