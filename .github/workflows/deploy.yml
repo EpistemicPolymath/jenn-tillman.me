@@ -21,22 +21,22 @@ jobs:
     runs-on: windows-latest
     environment: github-pages # Important: Must match the environment scope of the variable
     steps:
+      # 1. VARIABLE INJECTION STEP (MODIFIES FILES)
       - name: Inject CAREER_TODO Variable into JavaScript
-        shell: pwsh # Use PowerShell for the Windows runner
+        # CRITICAL: Forces the script to run from the repository root directory
+        working-directory: ${{ github.workspace }}
+        shell: pwsh
         run: |
           # 1. Define the relative path to the file
-          # We use forward slashes as the standard path separator.
-          $RelativePath = "assets/vendor/email-form/validate.js"
+          # We revert to the simple, relative path now that the working directory is set.
+          $FilePath = "assets/vendor/email-form/validate.js"
           
-          # 2. Use Resolve-Path to find the correct physical file location
-          # This should correctly handle the runner's workspace directory structure.
-          $FilePath = Resolve-Path $RelativePath
-          
-          # 3. Capture the variable and placeholder
+          # 2. Capture the variable and placeholder
           $TODO_VALUE = "${{ vars.CAREER_TODO }}"
           $Placeholder = "VARIABLE_PLACEHOLDER_CAREER_TODO" 
           
-          # 4. Perform the replacement and overwrite the file
+          # 3. Perform the replacement and overwrite the file
+          # Use Get-Content and Set-Content on the now-accessible file path
           $Content = Get-Content -Path $FilePath -Encoding UTF8
           $Content -replace $Placeholder, $TODO_VALUE | Set-Content -Path $FilePath -Encoding UTF8
 
